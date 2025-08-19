@@ -64,17 +64,12 @@ public class Fatura {
 	}
 
 	public void setCpf(String cpf) {
-		try {
-			if (isValido(cpf)) {
-				this.cpf = cpf;
 
-			} else {
-				throw new IllegalArgumentException("CPF invalido");
-			}
-		} catch (Exception e) {
+		if (isValido(cpf)) {
+			this.cpf = cpf;
+		} else {
 			throw new IllegalArgumentException("CPF invalido");
 		}
-
 	}
 
 	public LocalDate getDataEmissao() {
@@ -98,6 +93,7 @@ public class Fatura {
 			throw new IllegalArgumentException(
 					"Data de vencimento: formato invalido ou domingo ou menor que data atual");
 		}
+
 	}
 
 	public String getServicoContratado() {
@@ -118,11 +114,11 @@ public class Fatura {
 	}
 
 	public void setValor(String v) {
-      
+
 		try {
 			BigDecimal temp = new BigDecimal(v);
-			
-			//BigDecimal val = new BigDecimal(v.replace(",", "."));
+
+			// BigDecimal val = new BigDecimal(v.replace(",", "."));
 			this.valor = temp;
 			if (valor.compareTo(BigDecimal.ZERO) <= 0) {
 				throw new IllegalArgumentException("O valor da fatura deve ser maior que zero.");
@@ -165,58 +161,51 @@ public class Fatura {
 		}
 	}
 
-	public static boolean isValido(String cpf) {
-		if (cpf.equals("00000000000") || cpf.equals("11111111111") || cpf.equals("22222222222")
-				|| cpf.equals("33333333333") || cpf.equals("44444444444") || cpf.equals("55555555555")
-				|| cpf.equals("66666666666") || cpf.equals("77777777777") || cpf.equals("88888888888")
-				|| cpf.equals("99999999999") || (cpf.length() != 11))
-			return (false);
+	private boolean isValido(String cpf) {
+		// Remover caracteres não numéricos
+		cpf = cpf.replace(".", "").replace("-", "");
 
-		char dig10, dig11;
-		int sm, i, r, num, peso;
-
-		try {
-			sm = 0;
-			peso = 10;
-			for (i = 0; i < 9; i++) {
-				num = (cpf.charAt(i) - 48);
-				sm = sm + (num * peso);
-				peso = peso - 1;
-			}
-
-			r = 11 - (sm % 11);
-
-			if ((r == 10) || (r == 11)) {
-				dig10 = '0';
-			} else {
-				dig10 = (char) (r + 48);
-			}
-
-			sm = 0;
-			peso = 11;
-
-			for (i = 0; i < 10; i++) {
-				num = (cpf.charAt(i) - 48);
-				sm = sm + (num * peso);
-				peso = peso - 1;
-			}
-
-			r = 11 - (sm % 11);
-
-			if ((r == 10) || (r == 11)) {
-				dig11 = '0';
-			} else {
-				dig11 = (char) (r + 48);
-			}
-
-			if ((dig10 == cpf.charAt(9)) && (dig11 == cpf.charAt(10))) {
-				return (true);
-			} else {
-				return (false);
-			}
-		} catch (InputMismatchException erro) {
-			return (false);
+		// Verifica se o CPF tem 11 dígitos
+		if (cpf.length() != 11) {
+			return false;
 		}
+
+		// Verifica se todos os dígitos são iguais (ex: 111.111.111-11)
+		if (cpf.matches("(\\d)\\1{10}")) {
+			return false;
+		}
+
+		// 1º dígito verificador
+		try {
+			int soma = 0;
+			for (int i = 0; i < 9; i++) {
+				soma += (cpf.charAt(i) - '0') * (10 - i);
+			}
+			int digito1 = 11 - (soma % 11);
+			if (digito1 > 9) {
+				digito1 = 0;
+			}
+			if (digito1 != (cpf.charAt(9) - '0')) {
+				return false;
+			}
+
+			// 2º dígito verificador
+			soma = 0;
+			for (int i = 0; i < 10; i++) {
+				soma += (cpf.charAt(i) - '0') * (11 - i);
+			}
+			int digito2 = 11 - (soma % 11);
+			if (digito2 > 9) {
+				digito2 = 0;
+			}
+			if (digito2 != (cpf.charAt(10) - '0')) {
+				return false;
+			}
+		} catch (Exception e) {
+			return false;
+		}
+
+		return true;
 	}
 
 }

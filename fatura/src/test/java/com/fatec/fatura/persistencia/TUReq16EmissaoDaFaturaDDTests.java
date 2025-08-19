@@ -22,9 +22,12 @@ class TUReq16EmissaoDaFaturaDDTests {
 	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 	@Test
 	public void ct_verifica_comportamento_fatura() {
+		String path = "C:/edson/dataset_fatura/fatura2.csv";
+		//String path = "e:/dataset_fatura/fatura2.csv";
 		String resultadoEsperado = "";
 		try {
-			d = CsvReader.lerArquivo("e:/dataset_fatura/fatura2.csv");
+			
+			d = CsvReader.lerArquivo(path);
 			System.out.println(">>>>>>>>> quantidade de registros =>" + d.size());
 		} catch (IOException e) {
 			System.out.println(">>>>>> Erro de IO => " + e.getMessage());
@@ -35,7 +38,7 @@ class TUReq16EmissaoDaFaturaDDTests {
 			try {
 				System.out.println(">>>>>> registro => " + registro);
 				resultadoEsperado = f.re();
-				System.out.println("cpf ==> " + f.cpf() + "-  " + resultadoEsperado);
+				System.out.println("cpf ==> " + f.cpf() + " - RE= " + resultadoEsperado);
 				LocalDate dataVencimento = LocalDate.parse(f.dtemissao(), formatter);
 				fatura = new Fatura(f.cpf(), dataVencimento, f.servico(), f.valor());
 				assertNotNull(fatura);
