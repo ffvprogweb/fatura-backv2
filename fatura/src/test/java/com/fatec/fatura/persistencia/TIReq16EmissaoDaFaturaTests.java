@@ -15,11 +15,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.fatec.fatura.model.Fatura;
 import com.fatec.fatura.service.IFaturaRepository;
+import com.fatec.fatura.service.IFaturaService;
 @SpringBootTest
 class TIReq16EmissaoDaFaturaTests {
 	Logger logger = LogManager.getLogger(this.getClass());
 	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-	
+	@Autowired
+	IFaturaService service;
 	Fatura fatura;
 	@Autowired
 	IFaturaRepository repository;
