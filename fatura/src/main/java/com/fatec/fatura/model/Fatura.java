@@ -3,8 +3,7 @@ package com.fatec.fatura.model;
 import java.math.BigDecimal;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.InputMismatchException;
+
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -39,8 +38,8 @@ public class Fatura {
 
 	@Column(nullable = false)
 	private boolean paga;
-
-	// Construtores
+	
+	
 	public Fatura() {
 	}
 
@@ -66,6 +65,7 @@ public class Fatura {
 	public void setCpf(String cpf) {
 
 		if (isValido(cpf)) {
+			
 			this.cpf = cpf;
 		} else {
 			throw new IllegalArgumentException("CPF invalido");
@@ -87,7 +87,7 @@ public class Fatura {
 	public void setDataVencimento(LocalDate dataVencimento) {
 		if (dataVencimento != null && (!isDomingo(dataVencimento)) && (!isAnteriorDataAtual(dataVencimento))) {
 			this.dataVencimento = dataVencimento;
-			System.out.println(">>>>>> data vencimento => " + dataVencimento);
+			System.out.println(">>>>>> data vencimento valida => " + dataVencimento);
 
 		} else {
 			throw new IllegalArgumentException(
@@ -101,7 +101,6 @@ public class Fatura {
 	}
 
 	public void setServicoContratado(String servico) {
-		System.out.println("servico ==> " + servico);
 		if (servico.isEmpty()) {
 			throw new IllegalArgumentException("Descricao do servico invalido");
 		} else {
@@ -145,20 +144,11 @@ public class Fatura {
 	}
 
 	public boolean isDomingo(LocalDate date) {
-
-		if (date.getDayOfWeek() == DayOfWeek.SUNDAY) {
-			return true;
-		} else {
-			return false;
-		}
+		return date.getDayOfWeek() == DayOfWeek.SUNDAY;
 	}
 
 	public boolean isAnteriorDataAtual(LocalDate date) {
-		if (date.isBefore(LocalDate.now())) {
-			return true;
-		} else {
-			return false;
-		}
+		return date.isBefore(LocalDate.now());
 	}
 
 	private boolean isValido(String cpf) {

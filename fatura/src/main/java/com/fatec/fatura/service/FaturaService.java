@@ -37,7 +37,7 @@ public class FaturaService implements IFaturaService {
 		} catch (Exception e) {
 			logger.info(
 					">>>>>> FaturaService metodo registrar fatura - erro no cadastro da fatura -> " + e.getMessage());
-			return new FaturaResponse(false, "Erro no registro da fatura=> " + e.getMessage(), null);
+			return new FaturaResponse(false, "Erro no registro da fatura" , null);
 		}
 	}
 
