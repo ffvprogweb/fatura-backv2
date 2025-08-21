@@ -144,4 +144,53 @@ class TUReq16EmissaoDaFaturaTests {
 	        LocalDate.of(2026, 2, 31);
 	    });
 	}
+	@Test
+	void ct09_quando_data_vencimento_formato() {
+		try {
+			LocalDate dataVencimento = LocalDate.parse("31-08-2024", formatter);
+		} catch (Exception e) {
+			assertEquals("Text '31-08-2024' could not be parsed at index 2", e.getMessage());
+
+		}
+	}
+	@Test
+	void ct10_quando_valor_invalido_vazio() {
+		try {
+			LocalDate dataVencimento = LocalDate.parse("02/10/2026", formatter);
+			fatura = new Fatura("39086360009", dataVencimento, "moveis planejados", "");
+		} catch (Exception e) {
+			assertEquals("Valor da fatura invalido", e.getMessage());
+
+		}
+	}
+	@Test
+	void ct11_quando_valor_invalido_branco() {
+		try {
+			LocalDate dataVencimento = LocalDate.parse("02/10/2026", formatter);
+			fatura = new Fatura("39086360009", dataVencimento, "moveis planejados", " ");
+		} catch (Exception e) {
+			assertEquals("Valor da fatura invalido", e.getMessage());
+
+		}
+	}
+	@Test
+	void ct12_quando_valor_invalido_caracter() {
+		try {
+			LocalDate dataVencimento = LocalDate.parse("02/10/2026", formatter);
+			fatura = new Fatura("39086360009", dataVencimento, "moveis planejados", "s");
+		} catch (Exception e) {
+			assertEquals("Valor da fatura invalido", e.getMessage());
+
+		}
+	}
+	@Test
+	void ct13_quando_valor_invalido_menor_que_zero() {
+		try {
+			LocalDate dataVencimento = LocalDate.parse("02/10/2026", formatter);
+			fatura = new Fatura("39086360009", dataVencimento, "moveis planejados", "-1");
+		} catch (Exception e) {
+			assertEquals("O valor da fatura deve ser maior que zero.", e.getMessage());
+
+		}
+	}
 }

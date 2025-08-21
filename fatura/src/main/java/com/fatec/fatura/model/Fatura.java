@@ -39,7 +39,6 @@ public class Fatura {
 	@Column(nullable = false)
 	private boolean paga;
 	
-	
 	public Fatura() {
 	}
 
@@ -63,9 +62,7 @@ public class Fatura {
 	}
 
 	public void setCpf(String cpf) {
-
 		if (isValido(cpf)) {
-			
 			this.cpf = cpf;
 		} else {
 			throw new IllegalArgumentException("CPF invalido");
