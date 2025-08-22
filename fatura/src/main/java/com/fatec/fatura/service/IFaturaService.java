@@ -19,7 +19,7 @@ public interface IFaturaService {
 	public List<Fatura> consultaTodos();
 
 //Req18 - prioridade media
-	public List<Fatura> consultaCpf(String cpf);
+	public List<Fatura> consultaFaturaPorCpf(String cpf);
 
 //Req19 - prioridade media
 	public void cancela(Long id, String cpf);

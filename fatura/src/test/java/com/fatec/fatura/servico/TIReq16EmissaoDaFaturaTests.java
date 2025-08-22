@@ -29,7 +29,7 @@ class TIReq16EmissaoDaFaturaTests {
 		FaturaResponse response = servico.registrar(fatura);
 		System.out.println(response.getMensagem());
 		assertTrue(repository.count() >= 1);
-		List<Fatura> f = servico.consultaCpf("21805801007");
+		List<Fatura> f = servico.consultaFaturaPorCpf("21805801007");
 		assertTrue(f.size() >= 1);
 	}
 

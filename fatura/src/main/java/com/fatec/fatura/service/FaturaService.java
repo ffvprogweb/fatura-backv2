@@ -65,9 +65,8 @@ public class FaturaService implements IFaturaService {
 	}
 
 	@Override
-	public List<Fatura> consultaCpf(String cpf) {
-		// TODO Auto-generated method stub
-		return faturaRepository.findByCpf(cpf);
+	public List<Fatura> consultaFaturaPorCpf(String cpf) {
+			return faturaRepository.findByCpf(cpf);
 	}
 
 	@Override
@@ -75,8 +74,13 @@ public class FaturaService implements IFaturaService {
 		// TODO Auto-generated method stub
 		
 	}
+	/**
+	 * Consulta o serviço de manutenção de clientes para verificar se o cliente esta cadastrado
+	 * @param cpf - do cliente que esta efetivando a compra
+	 * @return - verdadeiro se o cliente esta cadastrado e falso cliente não cadastrado
+	 */
 	public boolean cpfCadastrado(String cpf) {
-		logger.info(">>>>>> consulta o cpf da fatura no servico cliente " );
+		logger.info(">>>>>> consulta o cpf do cliente no servico mantem cliente " );
 		return true;
 	}
 }
