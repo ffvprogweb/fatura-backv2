@@ -1,15 +1,18 @@
 package com.fatec.fatura.persistencia;
 
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class DataFaturamento {
 	public String obtemDataAtual() {
-		DateTime data = new DateTime();
-		DateTimeFormatter fmt = DateTimeFormat.forPattern("dd/MM/YYYY");
+		// 1. Obter a data atual com LocalDate
+        LocalDate dataAtual = LocalDate.now();
+		// 2. Definir o formato para dia/mês/ano
+        DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        // 3. Formatar a data atual usando o formatador
+        String dataFormatada = dataAtual.format(formatador);
 		// DateTime dataVencimento = dataAtual.plusDays(10);
-		return data.toString(fmt);
+		return dataFormatada;
 	}
 
 }
