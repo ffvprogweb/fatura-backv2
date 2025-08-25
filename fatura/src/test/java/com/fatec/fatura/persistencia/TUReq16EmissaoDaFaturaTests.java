@@ -24,7 +24,7 @@ class TUReq16EmissaoDaFaturaTests {
 	Fatura fatura;
 
 	@Test
-	void ct01_quando_dados_validos_fatura_nao_eh_nulo() {
+	void ct01_quando_dados_validos_retorna_sucesso() {
 		try {
 			// dado que as informacoes de fatura sao validas
 			// quando confirmo a fatura
@@ -56,12 +56,12 @@ class TUReq16EmissaoDaFaturaTests {
 		}
 	}
 	@Test
-	void ct03_quando_cpf_cacter_letra_mensagem_de_erro() {
+	void ct03_quando_cpf_alfa_numerico_mensagem_de_erro() {
 		try {
 			// dado que que o cnpj é letra
 			// quando confirmo a fatura
 			LocalDate dataVencimento = LocalDate.parse("02/10/2026", formatter);
-			fatura = new Fatura("aa", dataVencimento, "moveis planejados", "1000.50");
+			fatura = new Fatura("a1", dataVencimento, "moveis planejados", "1000.50");
 			fail("deveria falhar fatura invalida");
 		} catch (Exception e) {
 			// entao retorna mensagem de cnpj invalido
@@ -69,9 +69,23 @@ class TUReq16EmissaoDaFaturaTests {
 
 		}
 	}
-
+	
 	@Test
-	void ct04_quando_data_vencimento_domingo_retorna_invalido() {
+	void ct04_quando_cpf_null_mensagem_de_erro() {
+		try {
+			// dado que que o cnpj é letra
+			// quando confirmo a fatura
+			LocalDate dataVencimento = LocalDate.parse("02/10/2026", formatter);
+			fatura = new Fatura(null, dataVencimento, "moveis planejados", "1000.50");
+			fail("deveria falhar fatura invalida");
+		} catch (Exception e) {
+			// entao retorna mensagem de cnpj invalido
+			assertEquals("CPF invalido", e.getMessage());
+
+		}
+	}
+	@Test
+	void ct05_quando_data_vencimento_domingo_retorna_invalido() {
 		try {
 			LocalDate dataVencimento = LocalDate.parse("31/08/2025", formatter);
 			fatura = new Fatura("39086360009", dataVencimento, "moveis planejados", "1000.50");
@@ -82,7 +96,7 @@ class TUReq16EmissaoDaFaturaTests {
 	}
 
 	@Test
-	void ct05_quando_data_vencimento_invalida_menor_data_atual() {
+	void ct06_quando_data_vencimento_invalida_menor_data_atual() {
 		try {
 			LocalDate dataVencimento = LocalDate.parse("31/08/2024", formatter);
 			fatura = new Fatura("39086360009", dataVencimento, "moveis planejados", "1000.50");
@@ -96,7 +110,7 @@ class TUReq16EmissaoDaFaturaTests {
 	 * validacao de data semantica 31/02/2026
 	 */
 	@Test
-	void ct06_quando_data_vencimento_invalido_fevereiro31_msg_erro() {
+	void ct07_quando_data_vencimento_invalido_fevereiro31_msg_erro() {
 		String dataString = "31/02/2026";
 		 try {
 			    // supoe que a data esta formatada corretamente
@@ -123,7 +137,7 @@ class TUReq16EmissaoDaFaturaTests {
 		
 	}
 	@Test
-	void ct07_quando_data_vencimento_invalido_feveriro31_msg_erro() {
+	void ct08_quando_data_vencimento_invalido_feveriro31_msg_erro() {
 		try {
             // Tentativa de criar uma data inválida
             LocalDate dataInvalida = LocalDate.of(2023, 2, 31);
@@ -137,7 +151,7 @@ class TUReq16EmissaoDaFaturaTests {
 		
 	}
 	@Test
-	void ct08_quando_data_vencimento_invalido_fevereiro31_msg_erro() {
+	void ct09_quando_data_vencimento_invalido_fevereiro31_msg_erro() {
 	    // O teste espera que a exceção DateTimeException seja lançada
 	    assertThrows(DateTimeException.class, () -> {
 	        // Código que deve lançar a exceção
@@ -145,7 +159,7 @@ class TUReq16EmissaoDaFaturaTests {
 	    });
 	}
 	@Test
-	void ct09_quando_data_vencimento_formato() {
+	void ct10_quando_data_vencimento_formato() {
 		try {
 			LocalDate dataVencimento = LocalDate.parse("31-08-2024", formatter);
 		} catch (Exception e) {
@@ -154,7 +168,7 @@ class TUReq16EmissaoDaFaturaTests {
 		}
 	}
 	@Test
-	void ct10_quando_valor_invalido_vazio() {
+	void ct11_quando_valor_invalido_vazio() {
 		try {
 			LocalDate dataVencimento = LocalDate.parse("02/10/2026", formatter);
 			fatura = new Fatura("39086360009", dataVencimento, "moveis planejados", "");
@@ -164,7 +178,7 @@ class TUReq16EmissaoDaFaturaTests {
 		}
 	}
 	@Test
-	void ct11_quando_valor_invalido_branco() {
+	void ct12_quando_valor_invalido_branco() {
 		try {
 			LocalDate dataVencimento = LocalDate.parse("02/10/2026", formatter);
 			fatura = new Fatura("39086360009", dataVencimento, "moveis planejados", " ");
@@ -174,7 +188,7 @@ class TUReq16EmissaoDaFaturaTests {
 		}
 	}
 	@Test
-	void ct12_quando_valor_invalido_caracter() {
+	void ct13_quando_valor_invalido_caracter() {
 		try {
 			LocalDate dataVencimento = LocalDate.parse("02/10/2026", formatter);
 			fatura = new Fatura("39086360009", dataVencimento, "moveis planejados", "s");
@@ -184,7 +198,7 @@ class TUReq16EmissaoDaFaturaTests {
 		}
 	}
 	@Test
-	void ct13_quando_valor_invalido_menor_que_zero() {
+	void ct14_quando_valor_invalido_menor_que_zero() {
 		try {
 			LocalDate dataVencimento = LocalDate.parse("02/10/2026", formatter);
 			fatura = new Fatura("39086360009", dataVencimento, "moveis planejados", "-1");

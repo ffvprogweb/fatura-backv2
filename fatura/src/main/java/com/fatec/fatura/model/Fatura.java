@@ -62,7 +62,7 @@ public class Fatura {
 	}
 
 	public void setCpf(String cpf) {
-		if (isValido(cpf)) {
+		if (cpf != null && isValido(cpf)) {
 			this.cpf = cpf;
 		} else {
 			throw new IllegalArgumentException("CPF invalido");
@@ -84,7 +84,7 @@ public class Fatura {
 	public void setDataVencimento(LocalDate dataVencimento) {
 		if (dataVencimento != null && (!isDomingo(dataVencimento)) && (!isAnteriorDataAtual(dataVencimento))) {
 			this.dataVencimento = dataVencimento;
-			System.out.println(">>>>>> data vencimento valida => " + dataVencimento);
+			System.out.println(">>>>>> classe fatura data vencimento valida => " + dataVencimento);
 
 		} else {
 			throw new IllegalArgumentException(

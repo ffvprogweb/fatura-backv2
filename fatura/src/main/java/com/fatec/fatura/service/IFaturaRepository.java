@@ -10,7 +10,17 @@ import com.fatec.fatura.model.Fatura;
 
 @Repository
 public interface IFaturaRepository extends JpaRepository<Fatura, Long> {
-	// Método que consulta todas as faturas de um determinado CPF.
+	/**
+	 * consulta todas as faturas registradas para o cpf
+	 * @param cpf
+	 * @return array de faturas
+	 */
     List<Fatura> findByCpf(String cpf);
+    /**
+     * consulta todas as faturas registradas para o cpf por data de emissao
+     * @param cpf
+     * @param dataEmissao
+     * @return array de faturas
+     */
 	List<Fatura> findByCpfAndDataEmissao(String cpf, LocalDate dataEmissao);
 }
