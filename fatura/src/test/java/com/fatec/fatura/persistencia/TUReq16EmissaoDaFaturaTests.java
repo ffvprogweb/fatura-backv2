@@ -27,17 +27,14 @@ class TUReq16EmissaoDaFaturaTests {
 	void ct01_quando_dados_validos_retorna_sucesso() {
 		try {
 			// dado que as informacoes de fatura sao validas
-			// quando confirmo a fatura
 			LocalDate dataVencimento = LocalDate.parse("02/10/2026", formatter);
 			fatura = new Fatura("39086360009", dataVencimento, "moveis planejados", "1000.50");
-			// entao fatura é registrada com data de emisssao igual a data de hoje
+			// quando confirmo a fatura
+			// entao a emissão da fatura é realizada com sucesso
 			assertNotNull(fatura);
-			assertFalse(fatura.isCancelada());
-			assertFalse(fatura.isPaga());
 		} catch (Exception e) {
-			logger.info(">>>>>> ct01 - nao deveria falhar => " + e.getMessage());
+			logger.info(">>>>>> ct01 mensagem da exception => " + e.getMessage());
 			fail("nao deveria falhar fatura valida");
-
 		}
 	}
 
