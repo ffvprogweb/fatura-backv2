@@ -85,7 +85,6 @@ public class Fatura {
 		this.dataVencimento = validarDataVencimento(data);
 	}
 	
-	 // ---- Método separado e testável ----
     protected LocalDate validarDataVencimento(LocalDate dataVencimento) {
         if (dataVencimento == null 
             || isDomingo(dataVencimento) 
