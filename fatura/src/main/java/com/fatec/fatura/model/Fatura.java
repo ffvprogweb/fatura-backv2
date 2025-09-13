@@ -80,18 +80,22 @@ public class Fatura {
 	public LocalDate getDataVencimento() {
 		return dataVencimento;
 	}
-
-	public void setDataVencimento(LocalDate dataVencimento) {
-		if (dataVencimento != null && (!isDomingo(dataVencimento)) && (!isAnteriorDataAtual(dataVencimento))) {
-			this.dataVencimento = dataVencimento;
-			System.out.println(">>>>>> classe fatura data vencimento valida => " + dataVencimento);
-
-		} else {
-			throw new IllegalArgumentException(
-					"Data de vencimento: formato invalido ou domingo ou menor que data atual");
-		}
-
+	
+	public void setDataVencimento(LocalDate data) {
+		this.dataVencimento = validarDataVencimento(data);
 	}
+	
+	 // ---- Método separado e testável ----
+    protected LocalDate validarDataVencimento(LocalDate dataVencimento) {
+        if (dataVencimento == null 
+            || isDomingo(dataVencimento) 
+            || isAnteriorDataAtual(dataVencimento)) {
+            throw new IllegalArgumentException(
+                "Data de vencimento: formato inválido, domingo ou menor que a data atual"
+            );
+        }
+        return dataVencimento;
+    }
 
 	public String getServicoContratado() {
 		return servicoContratado;

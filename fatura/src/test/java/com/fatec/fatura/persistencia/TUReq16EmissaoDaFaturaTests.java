@@ -88,7 +88,7 @@ class TUReq16EmissaoDaFaturaTests {
 			fatura = new Fatura("39086360009", dataVencimento, "moveis planejados", "1000.50");
 			fail("deveria falhar fatura data invalida domingo");
 		} catch (Exception e) {
-			assertEquals("Data de vencimento: formato invalido ou domingo ou menor que data atual", e.getMessage());
+			assertEquals("Data de vencimento: formato inválido, domingo ou menor que a data atual", e.getMessage());
 		}
 	}
 
@@ -99,7 +99,7 @@ class TUReq16EmissaoDaFaturaTests {
 			fatura = new Fatura("39086360009", dataVencimento, "moveis planejados", "1000.50");
 			fail("deveria falhar fatura data invalida");
 		} catch (Exception e) {
-			assertEquals("Data de vencimento: formato invalido ou domingo ou menor que data atual", e.getMessage());
+			assertEquals("Data de vencimento: formato inválido, domingo ou menor que a data atual", e.getMessage());
 
 		}
 	}
