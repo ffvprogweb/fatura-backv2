@@ -3,13 +3,21 @@ package com.fatec.fatura.service;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.time.format.ResolverStyle;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestTemplate;
 
+import com.fatec.fatura.model.ClienteDto;
 import com.fatec.fatura.model.Fatura;
 import com.fatec.fatura.model.FaturaDto;
 
@@ -17,12 +25,17 @@ import com.fatec.fatura.model.FaturaDto;
 public class FaturaService implements IFaturaService {
 	Logger logger = LogManager.getLogger(this.getClass());
 	IFaturaRepository faturaRepository;
+	
+	private RestTemplate restTemplate;
+	@Value("${api.cliente.url}")
+	private String apiClienteUrl;
 
 	/*
 	 * injecao de dependencia pelo construtor nao usa a construção implicita @Autowired
 	 */
-	public FaturaService(IFaturaRepository faturaRepository) {
+	public FaturaService(IFaturaRepository faturaRepository, RestTemplate restTemplate) {
 		this.faturaRepository = faturaRepository;
+		this.restTemplate = restTemplate;
 	}
 	@Override
 	/**
@@ -103,8 +116,32 @@ public class FaturaService implements IFaturaService {
 	 *         cadastrado
 	 */
 	public boolean cpfCadastrado(String cpf) {
-		logger.info(">>>>>> consulta o cpf do cliente no servico mantem cliente ");
-		return true;
+	    logger.info(">>>>>> Consultando CPF: {}", cpf);
+
+	    ClienteDto clienteRequest = new ClienteDto(cpf, "", "", "");
+	    HttpHeaders headers = new HttpHeaders();
+	    headers.setContentType(MediaType.APPLICATION_JSON);
+	    HttpEntity<ClienteDto> requestEntity = new HttpEntity<>(clienteRequest, headers);
+
+	    try {
+	        ResponseEntity<ClienteDto> response =
+	                restTemplate.postForEntity(apiClienteUrl, requestEntity, ClienteDto.class);
+
+	        if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+	            logger.info(">>>>>> CPF {} encontrado. Detalhes: {}", cpf, response.getBody());
+	            return true;
+	        }
+	        logger.warn(">>>>>> CPF {} não encontrado. Status: {}", cpf, response.getStatusCode());
+	        return false;
+
+	    } catch (HttpClientErrorException.NotFound e) {
+	        logger.info(">>>>>> CPF {} não encontrado", cpf);
+	        return false;
+
+	    } catch (HttpClientErrorException e) {
+	        logger.error("Erro na chamada da API de clientes: {}", e.getMessage(), e);
+	        throw new RuntimeException("Falha na comunicação com o serviço de clientes", e);
+	    }
 	}
 
 
