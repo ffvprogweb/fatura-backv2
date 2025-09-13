@@ -7,14 +7,15 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import com.fatec.fatura.model.ClienteDto;
@@ -62,15 +63,17 @@ public class FaturaService implements IFaturaService {
 			return new FaturaResponse(true, "Fatura registrada", novaFatura);
 
 		} catch (DateTimeParseException e) {
-			// Captura a exceção específica para datas inválidas.
-			logger.info(">>>>>> FaturaService metodo registrar fatura - erro de formato ou data inválida -> " + e.getMessage());
-			return new FaturaResponse(false, "Data de vencimento invalida. Por favor, verifique a data fornecida.",
-					null);
-		} catch (Exception e) {
-			// Captura qualquer outra exceção inesperada.
-			logger.info(">>>>>> FaturaService metodo registrar fatura - erro inesperado -> " + e.getMessage());
-			return new FaturaResponse(false, "Erro no registro da fatura", null);
-		}
+	        logger.warn(">>>>>> Data inválida: {}", e.getMessage());
+	        return new FaturaResponse(false, "Data de vencimento inválida. Verifique a data fornecida.", null);
+
+	    } catch (ClienteServiceUnavailableException e) {
+	        logger.error(">>>>>> Falha ao consultar serviço de clientes: {}", e.getMessage());
+	        return new FaturaResponse(false, "Não foi possível validar o CPF. Serviço de clientes indisponível.", null);
+
+	    } catch (Exception e) {
+	        logger.error(">>>>>> Erro inesperado no registro de fatura: {}", e.getMessage(), e);
+	        return new FaturaResponse(false, "Erro inesperado no registro da fatura", null);
+	    }
 	}
 
 	@Override
@@ -134,13 +137,20 @@ public class FaturaService implements IFaturaService {
 	        logger.warn(">>>>>> CPF {} não encontrado. Status: {}", cpf, response.getStatusCode());
 	        return false;
 
-	    } catch (HttpClientErrorException.NotFound e) {
-	        logger.info(">>>>>> CPF {} não encontrado", cpf);
-	        return false;
-
 	    } catch (HttpClientErrorException e) {
+	    	int statusCode = e.getStatusCode().value(); // obtem o codigo de status
+	        if (statusCode == 404 || statusCode == 400) {
+	            // 404 ou 400 -> CPF não cadastrado
+	            logger.info(">>>>>> CPF {} não cadastrado (status {})", cpf, statusCode);
+	            return false;
+	        }
+	        // Qualquer outro erro 4xx/5xx -> serviço indisponível
 	        logger.error("Erro na chamada da API de clientes: {}", e.getMessage(), e);
-	        throw new RuntimeException("Falha na comunicação com o serviço de clientes", e);
+	        throw new ClienteServiceUnavailableException("Serviço de clientes indisponível", e);
+	    } catch (ResourceAccessException e) {
+	        // Timeout ou problema de rede
+	        logger.error("Erro de comunicação com o serviço de clientes: {}", e.getMessage(), e);
+	        throw new ClienteServiceUnavailableException("Serviço de clientes indisponível", e);
 	    }
 	}
 
