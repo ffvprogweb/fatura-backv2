@@ -31,7 +31,7 @@ class TIReq16EmissaoDaFaturaTests {
 	void ct01_quando_dados_validos_retorna_sucesso() {
 		FaturaResponse response = null;
 		try {
-			//dado que as informacoes de cliente sao validas - cliente cadastrado
+			//dado que o serviço está disponivel e as informacoes de cliente sao validas
 			FaturaDto fatura = new FaturaDto("34722268037", "02/10/2025", "moveis planejados", "1000.50");
 			//quando confirmo o cadastro do cliente
 			response = servico.registrar(fatura);
@@ -46,17 +46,20 @@ class TIReq16EmissaoDaFaturaTests {
 		}
 	}
 
-//	@Test
-//	void ct02_quando_cpf_invalido_vazio_mensagem_de_erro()  {
-//		try {
-//			FaturaDto fatura = new FaturaDto("", "02/10/2025", "moveis planejados", "1000.50");
-//			FaturaResponse response = servico.registrar(fatura);
-//			System.out.println(">>>>>> CT02 = " + response.getMensagem());
-//			assertEquals("Erro no registro da fatura", response.getMensagem());
-//		} catch (Exception e) {
-//			fail("nao deveria falhar por exception =>" + e.getMessage());
-//		}
-//	}
+	@Test
+	void ct02_quando_cpf_invalido_vazio_mensagem_de_erro()  {
+		try {
+			//dado que o serviço está disponivel e o cpf é invalido
+			FaturaDto fatura = new FaturaDto("", "02/10/2025", "moveis planejados", "1000.50");
+			//quando confirmo o cadastro do cliente
+			FaturaResponse response = servico.registrar(fatura);
+			//entao mensagem de erro
+			System.out.println(">>>>>> CT02 = " + response.getMensagem());
+			assertEquals("CPF invalido nao cadastrado", response.getMensagem());
+		} catch (Exception e) {
+			fail("nao deveria falhar por exception =>" + e.getMessage());
+		}
+	}
 //	@Test
 //	void ct03_quando_cpf_alfa_numerico_mensagem_de_erro()  {
 //		try {

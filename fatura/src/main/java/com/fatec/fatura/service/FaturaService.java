@@ -119,7 +119,7 @@ public class FaturaService implements IFaturaService {
 	 *         cadastrado
 	 */
 	public boolean cpfCadastrado(String cpf) {
-	    logger.info(">>>>>> Consultando CPF: {}", cpf);
+	    logger.info(">>>>>> metodo cpfCadastrado consultando CPF: {}", cpf);
 
 	    ClienteDto clienteRequest = new ClienteDto(cpf, "", "", "");
 	    HttpHeaders headers = new HttpHeaders();
@@ -146,11 +146,11 @@ public class FaturaService implements IFaturaService {
 	        }
 	        // Qualquer outro erro 4xx/5xx -> serviço indisponível
 	        logger.error("Erro na chamada da API de clientes: {}", e.getMessage(), e);
-	        throw new ClienteServiceUnavailableException("Serviço de clientes indisponível", e);
+	        throw new ClienteServiceUnavailableException("Serviço de clientes indisponível");
 	    } catch (ResourceAccessException e) {
 	        // Timeout ou problema de rede
-	        logger.error("Erro de comunicação com o serviço de clientes: {}", e.getMessage(), e);
-	        throw new ClienteServiceUnavailableException("Serviço de clientes indisponível", e);
+	        logger.error("Erro de comunicação com o serviço de clientes: {}", e.getMessage());
+	        throw new ClienteServiceUnavailableException("Serviço de clientes indisponível");
 	    }
 	}
 
